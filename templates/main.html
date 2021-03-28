@@ -1,0 +1,69 @@
+{% block head %}
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+{% endblock %}
+
+<div class="wrapper">
+	<nav id="sidebar" style="background-color:#f4fbff">
+		<div class="sidebar-header">
+			<h3>
+				<a href="#" style="color:black">Tweet World</a>
+			</h3>
+		</div>
+		<ul class="list-unstyled components">
+			<li class="active">
+				<a href="#trending_tags" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle" style="background-color:#69b4ff">Trending Tweets</a>
+				<ul class="collapse list-unstyled show" id="trending_tags">
+					<li>
+						{% for i in contents%}
+							<a href="#{{i}}" style="scroll-behavior:smooth;">{{i}}</a>
+						{% endfor %}
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</nav>
+	<div id="content">
+		<div class="accordion container" id="tweet_accordion">
+			{%for i in contents.items()%}
+				<div class="card">
+					<div class="card-header" id="{{i[0]}}" style="background-color:aliceblue">
+						<a class="card-link" data-toggle="collapse" href="#tag_accordion_{{loop.index}}">{{i[0]}}</a>
+					</div>
+					{% set rowloop = loop %}
+					<div id="tag_accordion_{{loop.index}}" class="collapse {{' show' if not loop.index0}}" data-parent="#tweet_accordion">
+							{% for j in i[1]['articles'] %}
+								<div class="container">
+									<div class="card mb-3" style="max-width: 1080px;background-color:#f4fbff">
+										<div class="card-header">
+											<a class="card-link" data-toggle="collapse" href="#news_{{rowloop.index}}_{{loop.index}}">{{j['title']}}</a>
+										</div>
+
+										<div id="news_{{rowloop.index}}_{{loop.index}}" class="collapse{{' show' if not loop.index0}}" data-parent="#tag_accordion_{{rowloop.index}}">
+											<div class="row no-gutters">
+												<div class="col-md-4">
+													<img src="{{j['urlToImage']}}" class="card-img" alt="News Image">
+												</div>
+												<div class="col-md-8">
+													<div class="card-body">
+														<p class="card-text">{{j['description']}}</p>
+														<a href="{{j['url']}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Read More</a>
+													</div>
+												</div>
+											</div>
+										</div>
+
+									</div>
+								</div>
+							{%  endfor %}
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+
